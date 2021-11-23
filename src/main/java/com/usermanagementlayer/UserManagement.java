@@ -10,7 +10,7 @@ import javax.mail.MessagingException;
 public class UserManagement implements UserManagementInterface {
 
     @Override
-    public void signUp(String username,String fullName,String email, String password) {
+    public void signUp(String username,String fullName,String email) {
         UUID token = UUID.randomUUID();
         try {
             emailGateway.sendEmailVerification(email,token);
@@ -37,6 +37,6 @@ public class UserManagement implements UserManagementInterface {
 
     public static void main(String[] args) {
         UserManagement userManagement = new UserManagement();
-        userManagement.signUp("isratnoor", "israt", "kaziisratnoor@hotmail.com", "password");
+        userManagement.signUp("isratnoor", "israt", "kaziisratnoor@hotmail.com");
     }
 }
