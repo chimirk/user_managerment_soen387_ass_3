@@ -17,9 +17,10 @@ public class emailConfig {
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
-        String userName = "pollSystem@gmail.com";
-        String password = "password";
+        String userName = "pollsystem823@gmail.com";
+        String password = "password@P";
 
 
         return Session.getInstance(prop, new Authenticator() {
