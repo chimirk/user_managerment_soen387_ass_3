@@ -37,6 +37,7 @@ public class UserManagement implements UserManagementInterface {
 
     public static void main(String[] args) {
         UserManagement userManagement = new UserManagement();
-        userManagement.signUp("isratnoor", "israt", "kaziisratnoor@hotmail.com");
+        //userManagement.signUp("isratnoor", "israt", "kaziisratnoor@hotmail.com");
+        userManagement.signUp("mike", "mike kirka", "chirca.mircea@gmail.com");
     }
 }

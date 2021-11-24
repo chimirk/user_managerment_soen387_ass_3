@@ -20,15 +20,16 @@ public class emailGateway {
     public static void sendEmailVerification(String userEmail, UUID token) throws MessagingException {
         Session session = emailConfig.eConfig();
         Message msg = new MimeMessage(session);
-        String message = "<a href=\""+ "http://localhost:8080/soen_387_part_2_war_exploded/ActivateAccount?thisToken=" + token +">Activate Account</a>";
+        String url = "http://localhost:8080/soen_387_part_2_war_exploded/ActivateAccount?thisToken=" + token;
+        String textLink = "Email Verification link";
+        String content = "<a href='" + url + "'>" + textLink;
+        String message = "Hello User click this link to verify your email ";
 
-
-        msg.setFrom(new InternetAddress("kaziisratnoor@hotmail.com"));
         InternetAddress[] toAddresses = { new InternetAddress(userEmail) };
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject("Verify User Email");
         msg.setSentDate(new Date());
-        msg.setText(message);
+        msg.setContent(message + " " + content,"text/html;");
 
         // sends the e-mail
         Transport.send(msg);
