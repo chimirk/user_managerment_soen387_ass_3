@@ -12,8 +12,13 @@ public class UserManagement implements UserManagementInterface {
     @Override
     public void signUp(String username,String fullName,String email) {
         UUID token = UUID.randomUUID();
+
+        //save the token to the sql database
+
+
+        //send verification email to user
         try {
-            emailGateway.sendEmailVerification(email,token);
+            emailGateway.sendVerification(email,token);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
