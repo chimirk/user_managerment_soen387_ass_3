@@ -1,6 +1,6 @@
 package com.main;
 
-import com.usermanagementinterface.UserAdministration;
+import com.businesslayer.UserAdministration;
 import com.usermanagementlayer.UserManagement;
 
 public class Main {

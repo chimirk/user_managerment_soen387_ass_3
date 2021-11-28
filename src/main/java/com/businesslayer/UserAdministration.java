@@ -1,4 +1,4 @@
-package com.usermanagementinterface;
+package com.businesslayer;
 
 
 // this class will go into the business layer!!!

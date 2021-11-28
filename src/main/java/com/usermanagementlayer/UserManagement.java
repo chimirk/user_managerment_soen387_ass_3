@@ -1,6 +1,6 @@
 package com.usermanagementlayer;
 
-import com.usermanagementinterface.UserManagementInterface;
+import com.businesslayer.UserManagementInterface;
 
 import java.util.UUID;
 import com.gateways.*;

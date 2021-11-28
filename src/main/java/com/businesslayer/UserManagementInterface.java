@@ -1,4 +1,4 @@
-package com.usermanagementinterface;
+package com.businesslayer;
 
 public interface UserManagementInterface {
     void signUp( String username, String fullName, String email);
