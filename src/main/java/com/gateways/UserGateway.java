@@ -1,10 +1,13 @@
-package com.gateways;
+/*package com.gateways;
 
 import com.config.dbConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.UUID;
+import java.util.UUID;*/
+
+
+/*
 
 public class UserGateway {
     private static final String INSERT_TOKEN_SQL ="INSERT INTO poll_app.verification_tokens" +
@@ -14,13 +17,13 @@ public class UserGateway {
             "(username, email, full_name) VALUES" + "(?,?,?);";
 
     private static final String INSERT_USER_PASSWORD_SQL ="INSERT INTO poll_app.users" +
-            "(password) VALUES" + "(?);";
+            "(username, password) VALUES" + "(?, ?);";
 
-    public static void saveToken(UUID token) {
+    public static void saveToken(UUID token, String userName) {
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TOKEN_SQL)) {
             preparedStatement.setString(1, token.toString());
-            //missing creating and expiration
+            preparedStatement.setString(2, userName.toString());
             preparedStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,3 +50,4 @@ public class UserGateway {
         }
     }
 }
+*/
