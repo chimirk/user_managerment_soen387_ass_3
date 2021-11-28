@@ -1,5 +1,7 @@
 package com.gateways;
 
+import com.gateways.plugins.PluginFactory;
+
 import javax.mail.MessagingException;
 import java.util.UUID;
 

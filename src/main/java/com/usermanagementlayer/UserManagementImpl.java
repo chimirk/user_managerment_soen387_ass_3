@@ -1,6 +1,6 @@
 package com.usermanagementlayer;
 
-import com.businesslayer.UserManagementInterface;
+import com.businesslayer.UserManagement;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ import com.gateways.*;
 
 import javax.mail.MessagingException;
 
-public class UserManagement implements UserManagementInterface {
+public class UserManagementImpl implements UserManagement {
 
     @Override
     public void signUp(String username,String fullName,String email) {
@@ -49,8 +49,8 @@ public class UserManagement implements UserManagementInterface {
     }
 
     public static void main(String[] args) {
-        UserManagement userManagement = new UserManagement();
+        UserManagementImpl userManagementImpl = new UserManagementImpl();
         //userManagement.signUp("isratnoor", "israt", "kaziisratnoor@hotmail.com");
-        userManagement.signUp("mike", "mike kirka", "chirca.mircea@gmail.com");
+        userManagementImpl.signUp("mike", "mike kirka", "chirca.mircea@gmail.com");
     }
 }

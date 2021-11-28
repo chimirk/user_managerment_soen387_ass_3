@@ -3,24 +3,24 @@ package com.businesslayer;
 
 // this class will go into the business layer!!!
 public class UserAdministration {
-    private UserManagementInterface userManagementInterface;
+    private UserManagement userManagement;
 
-    public UserAdministration(UserManagementInterface userManagementInterface) {
-        this.userManagementInterface = userManagementInterface;
+    public UserAdministration(UserManagement userManagement) {
+        this.userManagement = userManagement;
     }
 
     public void signUpUser(String username, String fullName, String email) {
-        userManagementInterface.signUp(username, fullName, email);
+        userManagement.signUp(username, fullName, email);
     }
 
     public void forgotPasswordUser() {
-        userManagementInterface.forgotPassword();
+        userManagement.forgotPassword();
     }
 
     public void emailVerificationUser() {
-        userManagementInterface.emailVerification();
+        userManagement.emailVerification();
     }
     public void changePasswordUser() {
-        userManagementInterface.changePassword();
+        userManagement.changePassword();
     }
 }

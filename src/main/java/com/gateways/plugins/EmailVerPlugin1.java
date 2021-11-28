@@ -1,6 +1,7 @@
-package com.gateways;
+package com.gateways.plugins;
 
 import com.config.emailConfig;
+import com.gateways.EmailVerification;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.UUID;
 
-public class EmailVerificationImpl implements EmailVerification{
+public class EmailVerPlugin1 implements EmailVerification {
     @Override
     public void sendVerificationByEmail(String userEmail, UUID token) throws MessagingException {
         Session session = emailConfig.eConfig();
