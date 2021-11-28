@@ -3,6 +3,9 @@ package com.usermanagementlayer;
 import com.businesslayer.UserManagementInterface;
 
 import java.util.UUID;
+
+import com.databaseUM.UserGateway;
+import com.databaseUM.VerificationTokensGateway;
 import com.gateways.*;
 
 import javax.mail.MessagingException;
@@ -14,7 +17,10 @@ public class UserManagement implements UserManagementInterface {
         UUID token = UUID.randomUUID();
 
         //save the token to the sql database
+        VerificationTokensGateway.saveToken(token, username);
 
+        //save user info
+        UserGateway.saveUser(username, email, fullName);
 
         //send verification email to user
         try {
@@ -22,6 +28,8 @@ public class UserManagement implements UserManagementInterface {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
+
 
     }
 
