@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class PluginFactory {
+
     private static Properties props = new Properties();
 
     static{
         try{
-            InputStream input = new FileInputStream("src/main/resources/sendVerification.properties");
+            InputStream input = new FileInputStream("src/main/java/resources/sendVerification.properties");
             props.load(input);
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
