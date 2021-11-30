@@ -1,7 +1,7 @@
 package com.gateways.plugins;
 
 import com.config.emailConfig;
-import com.gateways.EmailVerification;
+import com.gateways.emailgateway.EmailVerification;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class EmailVerPlugin1 implements EmailVerification {
     @Override
-    public void sendVerificationByEmail(String userEmail, UUID token) throws MessagingException {
+    public void sendVerificationSignUpByEmail(String userEmail, UUID token) throws MessagingException {
         Session session = emailConfig.eConfig();
         Message msg = new MimeMessage(session);
         String url = "http://localhost:8080/soen_387_part_2_war_exploded/ActivateAccount?thisToken=" + token;
@@ -30,5 +30,10 @@ public class EmailVerPlugin1 implements EmailVerification {
 
         // sends the e-mail
         Transport.send(msg);
+    }
+
+    @Override
+    public void sendVerificationForgetPasswordByEmail(String userEmail, UUID token) throws MessagingException {
+
     }
 }

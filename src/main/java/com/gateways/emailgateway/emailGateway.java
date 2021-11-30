@@ -1,4 +1,4 @@
-package com.gateways;
+package com.gateways.emailgateway;
 
 import javax.mail.MessagingException;
 import java.util.Objects;
@@ -8,7 +8,7 @@ public class emailGateway {
 
     public static void sendVerification(String userEmail, UUID token) throws MessagingException {
 
-        Objects.requireNonNull(EmailVerification.INSTANCE).sendVerificationByEmail(userEmail, token);
+        Objects.requireNonNull(EmailVerification.INSTANCE).sendVerificationSignUpByEmail(userEmail, token);
 
     }
 }

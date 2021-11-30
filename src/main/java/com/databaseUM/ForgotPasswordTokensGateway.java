@@ -7,15 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class VerificationTokensGateway {
-    private static final String INSERT_TOKEN_SQL ="INSERT INTO poll_app.verification_tokens" +
-            "(verification_token, username) VALUES" + "(?,?);";
+public class ForgotPasswordTokensGateway {
+    private static final String INSERT_TOKEN_SQL ="INSERT INTO poll_app.forgot_password_tokens" +
+            "(forgot_password_token, username) VALUES" + "(?,?);";
 
-    private static final String DELETE_TOKEN_SQL ="DELETE FROM poll_app.verification_tokens" +
-            " WHERE verification_token = ?;";
+    private static final String DELETE_TOKEN_SQL ="DELETE FROM poll_app.forgot_password_tokens" +
+            " WHERE forgot_password_token = ?;";
 
-    private static final String SELECT_USERNAME_BY_TOKEN_SQL ="SELECT username FROM poll_app.verification_tokens" +
-            " WHERE  verification_token = ?;";
+    private static final String SELECT_USERNAME_BY_TOKEN_SQL ="SELECT username FROM poll_app.forgot_password_tokens" +
+            " WHERE  forgot_password_token = ?;";
 
     public static void saveToken(String token, String userName) {
         try(Connection connection = dbConfig.getConnection();
