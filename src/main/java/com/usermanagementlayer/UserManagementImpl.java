@@ -1,11 +1,6 @@
 package com.usermanagementlayer;
 
-/*
-import com.businesslayer.UserManagement;
-*/
-
 import java.util.UUID;
-
 import com.databaseUM.ForgotPasswordTokensGateway;
 import com.databaseUM.UserGateway;
 import com.databaseUM.VerificationTokensGateway;
@@ -17,7 +12,7 @@ import javax.mail.MessagingException;
 public class UserManagementImpl implements UserManagement {
 
     @Override
-    public void signUp(String username,String fullName,String email) throws Exception {
+    public void signUp(String username,String fullName,String email) throws UserManagementException, MessagingException {
         UUID verificationToken = UUID.randomUUID();
 
 
@@ -25,24 +20,17 @@ public class UserManagementImpl implements UserManagement {
             //save user info
             UserGateway.saveUser(username, email, fullName);
             //send verification email to user
-            try {
-                EmailGateway.sendVerification(email,verificationToken, true);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+            EmailGateway.sendVerification(email,verificationToken, true);
             //save the token to the sql database
             VerificationTokensGateway.saveToken(verificationToken.toString(), username);
         } else {
-            throw new Exception("This username is already registered");
+            throw new UserManagementException("This username is already registered");
         }
-
-
-
     }
 
 
     @Override
-    public void forgotPassword(String email) throws Exception {
+    public void forgotPassword(String email) throws UserManagementException, MessagingException {
 
         /*The user enters his email. we verify the email if it is registered in the system and it is active, then we send an email with the forgot password token (link) and
         deactivate the account.
@@ -59,25 +47,17 @@ public class UserManagementImpl implements UserManagement {
             username = UserGateway.getUsernameFromEmail(email);
             //save the token to the sql database
             ForgotPasswordTokensGateway.saveToken(forgotPasswordToken.toString(), username);
-
             //deactivate account
             UserGateway.updateActivationStatus("N", username);
-
             //send verification email to user
-            try {
-                EmailGateway.sendVerification(email,forgotPasswordToken, false);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
+            EmailGateway.sendVerification(email,forgotPasswordToken, false);
         } else {
-            throw new Exception("the provided email is not registered in the system.");
+            throw new UserManagementException("the provided email is not registered in the system.");
         }
-
-
     }
 
     @Override
-    public boolean emailVerification(String token, String password, boolean isANewUser) {
+    public boolean emailVerification(String token, String password, boolean isANewUser) throws UserManagementException {
         //Use the token to get the user and then update the password field of that user
         //Once the database has been updated, delete the token
 
@@ -99,11 +79,11 @@ public class UserManagementImpl implements UserManagement {
             } else {
                 ForgotPasswordTokensGateway.deleteToken(token);
             }
-
             return true;
+        } else {
+            throw new UserManagementException("password or username is empty or null");
         }
 
-        return false;
     }
     @Override
     public void changePassword(String username, String oldPassword, String newPassword) throws Exception {
@@ -118,7 +98,7 @@ public class UserManagementImpl implements UserManagement {
         */
 
         if (oldPassword.equals(newPassword)) {
-            throw new Exception("the old password and the new password are the same. please use a different new password");
+            throw new UserManagementException("the old password and the new password are the same. please use a different new password");
         }
 
         //verify if there is a match for username and old password
@@ -126,14 +106,7 @@ public class UserManagementImpl implements UserManagement {
             //update new password
             UserGateway.savePassword(newPassword, username);
         } else {
-            throw new Exception("Provided combination of username and old password does not exist in database");
+            throw new UserManagementException("Provided combination of username and old password does not exist in database");
         }
-
-
-
-
-        //update the username with the new password
-
     }
-
 }
