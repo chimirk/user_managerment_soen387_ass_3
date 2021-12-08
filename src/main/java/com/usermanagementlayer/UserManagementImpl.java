@@ -17,12 +17,13 @@ public class UserManagementImpl implements UserManagement {
 
 
         if (UserGateway.isANewUser(username)) {
+            //save the token to the sql database
+            VerificationTokensGateway.saveToken(verificationToken.toString(), username);
             //save user info
             UserGateway.saveUser(username, email, fullName);
             //send verification email to user
             EmailGateway.sendVerification(email,verificationToken, true);
-            //save the token to the sql database
-            VerificationTokensGateway.saveToken(verificationToken.toString(), username);
+
         } else {
             throw new UserManagementException("This username is already registered");
         }

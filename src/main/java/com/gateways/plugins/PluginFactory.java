@@ -5,20 +5,42 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class PluginFactory {
+    FileResourcesUtils fileResourcesUtils;
 
-    private static Properties props = new Properties();
+    private class FileResourcesUtils {
+        private InputStream getFileFromResourceAsStream(String fileName) {
 
-    static{
-        try{
-            InputStream input = new FileInputStream("src/main/java/resources/sendVerification.properties");
-            props.load(input);
-        } catch (Exception e) {
-            throw new ExceptionInInitializerError(e);
+            // The class loader that loaded the class
+            ClassLoader classLoader = getClass().getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+            // the stream holding the file content
+            if (inputStream == null) {
+                throw new IllegalArgumentException("file not found! " + fileName);
+            } else {
+                return inputStream;
+            }
         }
     }
 
-    public static Object getPlugin(Class iface) {
+    public Properties initialize() {
+        Properties props = new Properties();
+        String fileName = "sendVerification.properties";
+        fileResourcesUtils = new FileResourcesUtils();
 
+        try {
+            InputStream input = fileResourcesUtils.getFileFromResourceAsStream(fileName);
+            props.load(input);
+            return props;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public Object getPlugin(Class iface) {
+        Properties props = this.initialize();
         String impName = props.getProperty(iface.getName());
         if (impName == null) {
             throw new RuntimeException("implementation not specified for " +
@@ -35,5 +57,8 @@ public class PluginFactory {
         }
         return null;
     }
-
 }
+
+
+
+

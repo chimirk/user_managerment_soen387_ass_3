@@ -1,16 +1,17 @@
 package com.config;
 
-import java.util.Properties;
-import javax.mail.Authenticator;
-
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import java.util.Properties;
+import javax.mail.*;
 
 
 public class emailConfig {
 
 
     public static Session eConfig(){
+
+
         Properties prop = new Properties();
 
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -23,7 +24,8 @@ public class emailConfig {
         String password = "password@P";
 
 
-        return Session.getInstance(prop, new Authenticator() {
+
+        return Session.getInstance(prop, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(userName, password);
