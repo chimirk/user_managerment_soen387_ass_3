@@ -1,7 +1,7 @@
-package com.databaseUM;
+package com.databaseEG;
 
-import com.config.*;
 import com.databaseEG.helper.User;
+import com.config.dbConfig;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -2,6 +2,7 @@ package com.transformpattern;
 
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import com.transformpattern.*;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
@@ -19,7 +20,10 @@ public class EmailMessage implements Serializable {
 
     }
 
-    public EmailMessage(String greeting, Scope scope, String message, URL url) {
+    public EmailMessage(String greeting,
+                        Scope scope,
+                        String message,
+                        URL url) {
         this.greeting = greeting;
         this.scope = scope;
         this.message = message;
@@ -34,15 +38,15 @@ public class EmailMessage implements Serializable {
         this.greeting = greeting;
     }
 
-    public Scope getScope() {
+    public com.transformpattern.Scope getScope() {
         return scope;
     }
 
-    public void setScope(Scope scope) {
+    public void setScope(com.transformpattern.Scope scope) {
         this.scope = scope;
     }
 
-    public Object getMessage() {
+    public String getMessage() {
         return message;
     }
 
@@ -50,11 +54,11 @@ public class EmailMessage implements Serializable {
         this.message = message;
     }
 
-    public URL getUrl() {
+    public com.transformpattern.URL getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(com.transformpattern.URL url) {
         this.url = url;
     }
 }

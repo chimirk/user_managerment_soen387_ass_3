@@ -1,14 +1,15 @@
 package com.gateways.plugins;
 
 import com.config.emailConfig;
-import com.databaseUM.ForgotPasswordTokensGateway;
-import com.databaseUM.UserGateway;
-import com.databaseUM.VerificationTokensGateway;
+import com.databaseEG.VerificationTokensGateway;
+import com.databaseEG.ForgotPasswordTokensGateway;
+
 import com.gateways.emailgateway.EmailVerification;
 import com.transformpattern.EmailMessage;
 import com.transformpattern.Scope;
 import com.transformpattern.URL;
 import com.transformpattern.XMLSerializer;
+
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,7 +26,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.UUID;
 
 public class EmailVerPlugin1 implements EmailVerification {

@@ -1,6 +1,6 @@
 package com.usermanagementlayerinterface;
 
-import com.databaseUM.helper.User;
+import com.databaseEG.helper.User;
 import com.usermanagementlayer.UserManagementException;
 
 public interface UserManagement {

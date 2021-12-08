@@ -1,4 +1,4 @@
-package com.databaseUM.helper;
+package com.databaseEG.helper;
 
 public class User {
     private String username;

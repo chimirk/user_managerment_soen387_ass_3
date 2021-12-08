@@ -1,13 +1,12 @@
 package com.usermanagementlayer;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.UUID;
-import com.databaseUM.ForgotPasswordTokensGateway;
-import com.databaseUM.UserGateway;
-import com.databaseUM.VerificationTokensGateway;
-import com.databaseUM.helper.User;
+import com.databaseEG.ForgotPasswordTokensGateway;
+import com.databaseEG.UserGateway;
+import com.databaseEG.VerificationTokensGateway;
+import com.databaseEG.helper.User;
 import com.gateways.emailgateway.EmailGateway;
 import com.usermanagementlayerinterface.UserManagement;
 
@@ -27,7 +26,8 @@ public class UserManagementImpl implements UserManagement {
             //save user info
             UserGateway.saveUser(username, email, fullName);
             //send verification email to user
-            EmailGateway.sendVerification(email, verificationToken, true);
+            EmailGatewayWrapper emailGatewayWrapper = new EmailGatewayWrapper(new EmailGateway());
+            emailGatewayWrapper.sendVerification(email, verificationToken, true);
 
         } else {
             throw new UserManagementException("This username is already registered");
@@ -56,7 +56,8 @@ public class UserManagementImpl implements UserManagement {
             //deactivate account
             UserGateway.updateActivationStatus("N", username);
             //send verification email to user
-            EmailGateway.sendVerification(email, forgotPasswordToken, false);
+            EmailGatewayWrapper emailGatewayWrapper = new EmailGatewayWrapper(new EmailGateway());
+            emailGatewayWrapper.sendVerification(email, forgotPasswordToken, false);
         } else {
             throw new UserManagementException("the provided email is not registered in the system.");
         }
@@ -135,15 +136,13 @@ public class UserManagementImpl implements UserManagement {
     public User userLogin(String username, String password) {
         User result = new User();
         ArrayList<User> users = UserGateway.getAllUsersInfo();
-        if (users != null) {
-            for (int i = 0; i < users.size(); i++) {
-                if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
-                    result.setUsername(users.get(i).getUsername());
-                    result.setPassword(users.get(i).getPassword());
-                    result.setEmail(users.get(i).getEmail());
-                    result.setFullName(users.get(i).getFullName());
-                    return result;
-                }
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+                result.setUsername(users.get(i).getUsername());
+                result.setPassword(users.get(i).getPassword());
+                result.setEmail(users.get(i).getEmail());
+                result.setFullName(users.get(i).getFullName());
+                return result;
             }
         }
         return null;
