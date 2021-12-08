@@ -1,5 +1,6 @@
 package com.usermanagementlayerinterface;
 
+import com.databaseUM.helper.User;
 import com.usermanagementlayer.UserManagementException;
 
 public interface UserManagement {
@@ -7,4 +8,5 @@ public interface UserManagement {
     void forgotPassword(String email) throws Exception;
     boolean emailVerification(String token, String password, boolean isANEwUser) throws UserManagementException;
     void changePassword(String username, String oldPassword, String newPassword) throws Exception;
+    User userLogin(String username, String password);
 }

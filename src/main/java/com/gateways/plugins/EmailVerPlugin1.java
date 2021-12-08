@@ -32,23 +32,10 @@ public class EmailVerPlugin1 implements EmailVerification {
     @Override
     public void sendVerificationSignUpByEmail(String userEmail, UUID token) throws MessagingException {
         String username = VerificationTokensGateway.getUsernameFromToken(token.toString());
-        Properties prop = new Properties();
-
-        prop.put("mail.smtp.host", "smtp.gmail.com");
-        prop.put("mail.smtp.port", "587");
-        prop.put("mail.smtp.auth", true);
-        prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-        String userName = "pollsystem823@gmail.com";
-        String password = "password@P";
-
-        Session session = Session.getInstance(prop);
-
-        //Session session = emailConfig.eConfig();
+        Session session = emailConfig.eConfig();
         Message msg = new MimeMessage(session);
         String url =
-                "http://localhost:8080/soen_387_part_2_war_exploded/ActivateAccountNewUser?" +
+                "http://localhost:8080/soen_387_part_2_war_exploded/SignUpP1Servlet?" +
                         "thisToken=" + token +
                         "&thisUserName=" + username;
 
@@ -68,7 +55,6 @@ public class EmailVerPlugin1 implements EmailVerification {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         String filename = "messageTransformer.xsl";
         StreamSource streamSource = new StreamSource(getFileFromResourceAsStream(filename));
-        //StreamSource streamSource = new StreamSource("src/main/java/com/resources/messageTransformer.xsl");
         Transformer transformer = null;
         try {
             transformer = transformerFactory.newTransformer(streamSource);
@@ -85,7 +71,6 @@ public class EmailVerPlugin1 implements EmailVerification {
 
         String emailContent = streamResult.getWriter().toString();
 
-
         InternetAddress[] toAddresses = { new InternetAddress(userEmail) };
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject("User Email Verification");
@@ -93,7 +78,7 @@ public class EmailVerPlugin1 implements EmailVerification {
         msg.setContent(emailContent,"text/html;");
 
         // sends the e-mail
-        Transport.send(msg, userName, password);
+        Transport.send(msg);
     }
 
     @Override
@@ -101,7 +86,7 @@ public class EmailVerPlugin1 implements EmailVerification {
         String username = ForgotPasswordTokensGateway.getUsernameFromToken(token.toString());
         Session session = emailConfig.eConfig();
         Message msg = new MimeMessage(session);
-        String url = "http://localhost:8080/soen_387_part_2_war_exploded/ActivateAccountForgetPassword?" +
+        String url = "http://localhost:8080/soen_387_part_2_war_exploded/ForgotPasswordP1Servlet?" +
                 "thisToken=" + token +
                 "&thisUserName=" + username;
 

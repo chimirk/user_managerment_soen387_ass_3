@@ -1,10 +1,13 @@
 package com.databaseUM;
 
 import com.config.*;
+import com.databaseUM.helper.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -18,6 +21,7 @@ public class UserGateway {
     private static final String UPDATE_USER_ACTIVATION_STATUS_SQL ="UPDATE poll_app.users SET isValidated = ? WHERE username = ?;";
     private static final String SELECT_ALL_EMAILS_SQL ="SELECT email FROM poll_app.users;";
     private static final String SELECT_ALL_USERS_SQL ="SELECT username FROM poll_app.users;";
+    private static final String SELECT_ALL_USERS_INFO_SQL ="SELECT username, password, email, full_name FROM poll_app.users;";
     private static final String SELECT_USERNAME_FROM_EMAIL_SQL ="SELECT username FROM poll_app.users WHERE email = ?;";
     private static final String SELECT_USER_BY_USERNAME_AND_PASSWORD = "SELECT username, password FROM poll_app.users WHERE username = ? AND password = ?;";
     private static final String SELECT_PASSWORD_FROM_USERNAME = "SELECT password FROM poll_app.users WHERE password = ?;";
@@ -64,15 +68,37 @@ public class UserGateway {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     temp = resultSet.getString("password");
-                        if (temp != null) {
-                            return temp;
-                        }
+                    if (temp != null) {
+                        return temp;
                     }
-                } catch (SQLException sqlException) {
+                }
+            } catch (SQLException sqlException) {
                 sqlException.printStackTrace();
             }
         }
         return null;
+    }
+
+    public static ArrayList<User> getAllUsersInfo() {
+        ArrayList<User> users = new ArrayList<>();
+        try(Connection connection = dbConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS_INFO_SQL)) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    users.add(new User(
+                            resultSet.getString("username"),
+                            resultSet.getString("password"),
+                            resultSet.getString("email"),
+                            resultSet.getString("full_name")
+                    ));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     public static boolean isValidEmail (String userEmail) {

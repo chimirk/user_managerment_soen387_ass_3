@@ -1,18 +1,23 @@
 package com.usermanagementlayer;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.UUID;
 import com.databaseUM.ForgotPasswordTokensGateway;
 import com.databaseUM.UserGateway;
 import com.databaseUM.VerificationTokensGateway;
+import com.databaseUM.helper.User;
 import com.gateways.emailgateway.EmailGateway;
 import com.usermanagementlayerinterface.UserManagement;
 
 import javax.mail.MessagingException;
+import javax.xml.bind.DatatypeConverter;
 
 public class UserManagementImpl implements UserManagement {
 
     @Override
-    public void signUp(String username,String fullName,String email) throws UserManagementException, MessagingException {
+    public void signUp(String username, String fullName, String email) throws UserManagementException, MessagingException {
         UUID verificationToken = UUID.randomUUID();
 
 
@@ -22,7 +27,7 @@ public class UserManagementImpl implements UserManagement {
             //save user info
             UserGateway.saveUser(username, email, fullName);
             //send verification email to user
-            EmailGateway.sendVerification(email,verificationToken, true);
+            EmailGateway.sendVerification(email, verificationToken, true);
 
         } else {
             throw new UserManagementException("This username is already registered");
@@ -51,7 +56,7 @@ public class UserManagementImpl implements UserManagement {
             //deactivate account
             UserGateway.updateActivationStatus("N", username);
             //send verification email to user
-            EmailGateway.sendVerification(email,forgotPasswordToken, false);
+            EmailGateway.sendVerification(email, forgotPasswordToken, false);
         } else {
             throw new UserManagementException("the provided email is not registered in the system.");
         }
@@ -86,6 +91,7 @@ public class UserManagementImpl implements UserManagement {
         }
 
     }
+
     @Override
     public void changePassword(String username, String oldPassword, String newPassword) throws Exception {
         /*
@@ -98,16 +104,48 @@ public class UserManagementImpl implements UserManagement {
         verified, the system will update database with the new password of the user.
         */
 
+        String oldPasswordHashed = "";
+        MessageDigest md1 = MessageDigest.getInstance("MD5");
+        md1.update(oldPassword.getBytes());
+        byte[] digest1 = md1.digest();
+        oldPasswordHashed = DatatypeConverter
+                .printHexBinary(digest1).toUpperCase();
+
+        String newPasswordHashed = "";
+        MessageDigest md2 = MessageDigest.getInstance("MD5");
+        md2.update(oldPassword.getBytes());
+        byte[] digest2 = md2.digest();
+        newPasswordHashed = DatatypeConverter
+                .printHexBinary(digest2).toUpperCase();
+
         if (oldPassword.equals(newPassword)) {
             throw new UserManagementException("the old password and the new password are the same. please use a different new password");
         }
 
         //verify if there is a match for username and old password
-        if (UserGateway.isUserNameAndOldPasswordValid(username, oldPassword)) {
+        if (UserGateway.isUserNameAndOldPasswordValid(username, oldPasswordHashed)) {
             //update new password
-            UserGateway.savePassword(newPassword, username);
+            UserGateway.savePassword(newPasswordHashed, username);
         } else {
             throw new UserManagementException("Provided combination of username and old password does not exist in database");
         }
+    }
+
+    @Override
+    public User userLogin(String username, String password) {
+        User result = new User();
+        ArrayList<User> users = UserGateway.getAllUsersInfo();
+        if (users != null) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+                    result.setUsername(users.get(i).getUsername());
+                    result.setPassword(users.get(i).getPassword());
+                    result.setEmail(users.get(i).getEmail());
+                    result.setFullName(users.get(i).getFullName());
+                    return result;
+                }
+            }
+        }
+        return null;
     }
 }
