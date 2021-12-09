@@ -1,6 +1,7 @@
 package com.usermanagementlayer;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.UUID;
 import com.databaseEG.ForgotPasswordTokensGateway;
@@ -8,6 +9,7 @@ import com.databaseEG.UserGateway;
 import com.databaseEG.VerificationTokensGateway;
 import com.databaseEG.helper.User;
 import com.gateways.emailgateway.EmailGateway;
+import com.gateways.emailgateway.EmailGatewayInterface;
 import com.usermanagementlayerinterface.UserManagement;
 
 import javax.mail.MessagingException;
@@ -16,9 +18,8 @@ import javax.xml.bind.DatatypeConverter;
 public class UserManagementImpl implements UserManagement {
 
     @Override
-    public void signUp(String username, String fullName, String email) throws UserManagementException, MessagingException {
+    public boolean signUp(String username, String fullName, String email) throws UserManagementException, MessagingException {
         UUID verificationToken = UUID.randomUUID();
-
 
         if (UserGateway.isANewUser(username)) {
             //save the token to the sql database
@@ -28,6 +29,7 @@ public class UserManagementImpl implements UserManagement {
             //send verification email to user
             EmailGatewayWrapper emailGatewayWrapper = new EmailGatewayWrapper(new EmailGateway());
             emailGatewayWrapper.sendVerification(email, verificationToken, true);
+            return true;
 
         } else {
             throw new UserManagementException("This username is already registered");
@@ -36,7 +38,7 @@ public class UserManagementImpl implements UserManagement {
 
 
     @Override
-    public void forgotPassword(String email) throws UserManagementException, MessagingException {
+    public boolean forgotPassword(String email) throws UserManagementException, MessagingException {
 
         /*The user enters his email. we verify the email if it is registered in the system and it is active, then we send an email with the forgot password token (link) and
         deactivate the account.
@@ -58,13 +60,14 @@ public class UserManagementImpl implements UserManagement {
             //send verification email to user
             EmailGatewayWrapper emailGatewayWrapper = new EmailGatewayWrapper(new EmailGateway());
             emailGatewayWrapper.sendVerification(email, forgotPasswordToken, false);
+            return true;
         } else {
             throw new UserManagementException("the provided email is not registered in the system.");
         }
     }
 
     @Override
-    public boolean emailVerification(String token, String password, boolean isANewUser) throws UserManagementException {
+    public boolean emailVerification(String token, String password, boolean isANewUser) throws UserManagementException, NoSuchAlgorithmException {
         //Use the token to get the user and then update the password field of that user
         //Once the database has been updated, delete the token
 
@@ -77,7 +80,14 @@ public class UserManagementImpl implements UserManagement {
         }
 
         if (password != null && username != null) {
-            UserGateway.savePassword(password, username);
+            String passwordHashed = "";
+            MessageDigest md1 = MessageDigest.getInstance("MD5");
+            md1.update(password.getBytes());
+            byte[] digest1 = md1.digest();
+            passwordHashed = DatatypeConverter
+                    .printHexBinary(digest1).toUpperCase();
+
+            UserGateway.savePassword(passwordHashed, username);
             UserGateway.updateActivationStatus("Y", username);
 
             //delete token
@@ -94,7 +104,7 @@ public class UserManagementImpl implements UserManagement {
     }
 
     @Override
-    public void changePassword(String username, String oldPassword, String newPassword) throws Exception {
+    public boolean changePassword(String username, String oldPassword, String newPassword) throws Exception {
         /*
         Precondition: the user must be logged in.
 
@@ -114,7 +124,7 @@ public class UserManagementImpl implements UserManagement {
 
         String newPasswordHashed = "";
         MessageDigest md2 = MessageDigest.getInstance("MD5");
-        md2.update(oldPassword.getBytes());
+        md2.update(newPassword.getBytes());
         byte[] digest2 = md2.digest();
         newPasswordHashed = DatatypeConverter
                 .printHexBinary(digest2).toUpperCase();
@@ -127,6 +137,7 @@ public class UserManagementImpl implements UserManagement {
         if (UserGateway.isUserNameAndOldPasswordValid(username, oldPasswordHashed)) {
             //update new password
             UserGateway.savePassword(newPasswordHashed, username);
+            return true;
         } else {
             throw new UserManagementException("Provided combination of username and old password does not exist in database");
         }

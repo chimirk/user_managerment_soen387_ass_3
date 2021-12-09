@@ -24,6 +24,10 @@ public class UserGateway {
     private static final String SELECT_USERNAME_FROM_EMAIL_SQL ="SELECT username FROM poll_app.users WHERE email = ?;";
     private static final String SELECT_USER_BY_USERNAME_AND_PASSWORD = "SELECT username, password FROM poll_app.users WHERE username = ? AND password = ?;";
     private static final String SELECT_PASSWORD_FROM_USERNAME = "SELECT password FROM poll_app.users WHERE password = ?;";
+    private static final String DELETE_USER_BY_USERNAME = "DELETE FROM poll_app.users WHERE username = ?;";
+    private static final String DELETE_USER_BY_EMAIL = "DELETE FROM poll_app.users WHERE email = ?;";
+
+
 
 
 
@@ -98,6 +102,26 @@ public class UserGateway {
             e.printStackTrace();
         }
         return users;
+    }
+
+    public static void deleteUserByUsername(String userName) {
+        try(Connection connection = dbConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_USERNAME)) {
+            preparedStatement.setString(1, userName);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteUserByEmail(String email) {
+        try(Connection connection = dbConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_EMAIL)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean isValidEmail (String userEmail) {

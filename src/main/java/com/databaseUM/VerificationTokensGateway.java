@@ -17,6 +17,8 @@ public class VerificationTokensGateway {
     private static final String SELECT_USERNAME_BY_TOKEN_SQL ="SELECT username FROM poll_app.verification_tokens" +
             " WHERE  verification_token = ?;";
 
+    private static final String DELETE_ALL_TOKENS_SQL ="DELETE FROM poll_app.verification_tokens;";
+
     public static void saveToken(String token, String userName) {
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_TOKEN_SQL)) {
@@ -32,6 +34,15 @@ public class VerificationTokensGateway {
         try(Connection connection = dbConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TOKEN_SQL)) {
             preparedStatement.setString(1, token);
+            preparedStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteAllTokens () {
+        try(Connection connection = dbConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ALL_TOKENS_SQL)) {
             preparedStatement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
